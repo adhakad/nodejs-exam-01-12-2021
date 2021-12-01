@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <link type="text/css" rel="stylesheet" href="sty.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="https://cdn.ckeditor.com/4.9.1/standard/ckeditor.js"></script>
+    <style>
+      .clearfix{
+         overflow: auto;
+      }
+   </style>
+</head>
+
+  <body>
+            
+              <div class="container">
+                <div class="row">
+                  <h2 class="text-center">Create questions</h2>
+                  <div id="signupbox" style="margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                      <div class="panel panel-info">
+                          <div class="panel-heading">
+                              <div class="panel-title">Class Room Create<div style="color: #000;" id="postResultDiv">
+                              </div></div>
+                               </div> 
+                          <div class="panel-body">
+                              
+                            
+                            <form  action="/questions" method="post" class="form-horizontal"  role="form">
+
+                              <input type="hidden" value="<%=i++ %>">
+
+                              <p><%=i++ %></p>
+
+                              <input type="hidden" value="<%=sn++ %>">
+                              <input type="hidden" name="eid" value="<%=eid %>">
+                              <input type="hidden" name="sn" value="<%=sn++ %>">
+                              <input type="hidden" name="total" value="<%=total %>">
+                              
+                            <div class="form-group">
+                              <label class="col-md-12 control-label"></label>  
+                              <div class="col-md-12">
+                              <textarea rows="3" cols="5" name="qns" class="form-control" placeholder="Write question number  here..." required></textarea>  
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-md-12 control-label"></label>  
+                              <div class="col-md-12">
+                              <input name="aa" placeholder="Enter option a" class="form-control input-md" type="text" required>
+                                
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-md-12 control-label"></label>  
+                              <div class="col-md-12">
+                              <input name="bb" placeholder="Enter option b" class="form-control input-md" type="text" required>
+                                
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-md-12 control-label" ></label>  
+                              <div class="col-md-12">
+                              <input name="cc"  placeholder="Enter option c" class="form-control input-md" type="text" required>
+                                
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-md-12 control-label" ></label>  
+                              <div class="col-md-12">
+                              <input name="dd" placeholder="Enter option d" class="form-control input-md" type="text" required>
+                                
+                              </div>
+                            </div>
+
+
+                            
+
+                            <b>Correct answer</b>:<br />
+                            <select name="ans" placeholder="Choose correct answer " class="form-control input-md">
+                              <option value="a">select correct answer</option>
+                              <option value="a">option a</option>
+                              <option value="b">option b</option>
+                              <option value="c">option c</option>
+                              <option value="d">option d</option> 
+                            </select><br /><br />
+                           
+                            
+                               <div class="form-group">                                        
+                                <div class="col-md-offset-3 col-md-9">
+                                <input type="submit" name="submit" value="Next" class="btn btn-primary">   
+                                </div>
+                              </div>                      
+                                    </form>
+                                        
+                                 </div>
+                            </div>
+                          </div> 
+                        </div>
+                      </div>
+            
+  
+                                        
+
+        
+              <script>
+                $( document ).ready(function() {
+                
+                // SUBMIT FORM
+                  $("#userForm").submit(function(event) {
+                  // Prevent the form from submitting via the browser.
+                  event.preventDefault();
+                  ajaxPost();
+                });
+                  
+                  
+                  function ajaxPost(){
+                    
+                    // PREPARE FORM DATA
+                    
+                    var formData = {
+                      sn : $("#sn").val(),
+                      qns : $("#qns").val(),
+                      a : $("#aa").val(),
+                      b : $("#bb").val(),
+                      c : $("#cc").val(),
+                      d : $("#dd").val(),
+                      
+                    }
+                  
+                    
+                    // DO POST
+                    $.ajax({
+                    type : "POST",
+                    contentType : "application/json",
+                    url : window.location + "/post",
+                    data : JSON.stringify(formData),
+                    dataType : 'json',
+                    success : function(result, status, xhr) { 
+                      
+                        window.location.href = result.redirects;
+                      
+                    },
+              
+                    error : function(e) {
+                      $("#postResultDiv").html("<p>" + "Post Already Exist On MongoDB Database! <br>" +"</p>"); 
+                    }
+                  })
+                      
+                    // Reset FormData after Posting
+                    resetData();
+              
+                  }
+              
+                  function resetData(){
+                    $("#sn").val("");
+                    $("#qns").val("");
+                    $("#aa").val("");
+                    $("#bb").val("");
+                    $("#cc").val("");
+                    $("#dd").val("");
+                    
+                      
+                    }
+
+              })
+              </script>
+
+
+       </body>
+</html>
